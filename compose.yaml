@@ -7,7 +7,7 @@ services:
     tty: true
     stdin_open: true
     environment:
-      TERM: xterm-kitty
+      TERM: xterm-256color
       DEVCONTAINER: "1"
     volumes:
       - .:/work

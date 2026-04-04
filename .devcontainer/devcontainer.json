@@ -1,0 +1,14 @@
+{
+  "name": "rustlings-dev",
+  "dockerComposeFile": ["../compose.yaml"],
+  "service": "dev",
+  "workspaceFolder": "/work",
+  "shutdownAction": "stopCompose",
+  "postAttachCommand": "bash -lc 'cd /work/.devcontainer && chmod +x bootstrap-dotfiles.sh && ./bootstrap-dotfiles.sh'",
+
+  "customizations": {
+    "vscode": {
+      "settings": {}
+    }
+  }
+}

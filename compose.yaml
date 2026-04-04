@@ -1,0 +1,30 @@
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    working_dir: /work
+    tty: true
+    stdin_open: true
+    environment:
+      TERM: xterm-kitty
+      DEVCONTAINER: "1"
+    volumes:
+      - .:/work
+      - cargo-registry:/usr/local/cargo/registry
+      - cargo-git:/usr/local/cargo/git
+      - target:/work/target
+      - nvim-data:/root/.local/share/nvim
+      - nvim-state:/root/.local/state/nvim
+      - nvim-cache:/root/.cache/nvim
+      - skk-dict:/root/.config/skk
+    command: sleep infinity
+
+volumes:
+  cargo-registry:
+  cargo-git:
+  target:
+  nvim-data:
+  nvim-state:
+  nvim-cache:
+  skk-dict:

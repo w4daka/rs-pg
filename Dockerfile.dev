@@ -1,0 +1,52 @@
+# Dockerfile.dev
+FROM rust:1.89-bookworm
+
+ARG NVIM_VERSION=v0.11.4
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git ca-certificates curl xz-utils unzip \
+    build-essential pkg-config \
+    zsh ripgrep fd-find fzf zoxide \
+    less procps file iputils-ping \
+    wamerican \
+    gzip  openssl imagemagick \
+    nodejs npm kitty-terminfo kitty \
+  && rm -rf /var/lib/apt/lists/*
+
+# Rust tooling
+RUN rustup component add \
+    rust-analyzer \
+    rustfmt \
+    clippy \
+    llvm-tools-preview
+
+
+# Neovim (official tarball)
+RUN curl -L -o /tmp/nvim.tar.gz \
+      "https://github.com/neovim/neovim/releases/download/${NVIM_VERSION}/nvim-linux-x86_64.tar.gz" \
+  && tar -C /opt -xzf /tmp/nvim.tar.gz \
+  && ln -s /opt/nvim-linux-x86_64/bin/nvim /usr/local/bin/nvim \
+  && rm -f /tmp/nvim.tar.gz
+
+# starship
+RUN curl -sS https://starship.rs/install.sh | sh -s -- -y -b /usr/local/bin
+
+# sheldon
+RUN cargo install --locked sheldon --version 0.8.4
+
+# Deno (official install script)
+RUN curl -fsSL https://deno.land/install.sh | sh \
+  && ln -s /root/.deno/bin/deno /usr/local/bin/deno
+
+
+# nvm
+RUN npm install n -g
+RUN n stable
+
+RUN apt purge -y nodejs npm && apt autoremove -y
+
+# markdown-toc, markdownlint-cli-2
+RUN npm install -g markdown-toc markdownlint-cli2
+
+WORKDIR /work
+SHELL ["/bin/zsh", "-lc"]
